@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Task } from '../types/types';
 import { Example } from '../pages/add-task';
+import { title } from 'process';
 
 // Remember React.FC is a react functional component
 
@@ -13,7 +14,9 @@ interface TaskCardProps {
 // This is our TaskCard Component that displays a single task
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   return (
-    <div key={task.id} className="p-4 border border-dark rounded shadow-md mb-4 text-center">
+    // <div key={task.id} className="p-4 border border-dark rounded shadow-md mb-4 text-center">
+    <div className="p-4 border border-dark rounded shadow-md mb-4 text-center">
+      {/* <p>taskid: {task.id}</p> */}
       <h2 className="text-2xl font-semibold text-blue-700">{task.title}</h2>
       <p className="text-blue-600">Description: {task.description}</p>
       <p className="text-blue-600">Status: {task.status}</p>
@@ -36,7 +39,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 // This is our Main Component first part gets our tasks from the API and the second part displays them
 const HomePage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-
+  const client = axios.create({
+    baseURL: 'http://http://127.0.0.1:8000/tasks'
+  });
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -50,6 +55,25 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const addTask = async (task: Task) => {
+    client.post('/tasks', task)
+    .then((response) => {
+      setTasks(response.data);
+    })
+  };
+
+  const testAddTask = async () => {
+    client.post('/tasks', {
+      title: 'Test Task',
+      description: 'This is a test task',
+      status: 'incomplete',
+      due_date: '2022-12-31'
+    })
+    .then((response) => {
+      setTasks(response.data);
+    })
+  };
+
   return (
     <div className="container mx-auto p-4 bg-white min-h-screen text-black flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold mb-6 text-blue-500">Welcome To My Task Web App!!</h1>
@@ -59,9 +83,13 @@ const HomePage: React.FC = () => {
         </section>
         <div>
         <h1 className="text-2xl font-bold mb-6 text-blue-500">Task to Complete:</h1>
+        <button onClick={testAddTask} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Test Task</button>
+        <ul>
           {tasks.map((task) => (
-            <TaskCard task={task} />
+            // <li key={task.id}>
+              <TaskCard task={task} />
           ))}
+        </ul>
         </div>
       </div>
       
