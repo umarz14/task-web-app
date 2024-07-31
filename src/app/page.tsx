@@ -82,17 +82,17 @@ const HomePage: React.FC = () => {
           <Example />
         </section>
         <div>
-        <h1 className="text-2xl font-bold mb-6 text-blue-500">Task to Complete:</h1>
-        <button onClick={testAddTask} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Test Task</button>
-        <ul>
-          {tasks.map((task) => (
-            // <li key={task.id}>
-              <TaskCard task={task} />
-          ))}
-        </ul>
+          <h1 className="text-2xl font-bold mb-6 text-blue-500">Task to Complete:</h1>
+          <button onClick={testAddTask} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Test Task</button>
+          <ul>
+            {tasks.map((task) => (
+              <li key={task.id}>
+                <TaskCard task={task} />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-      
     </div>
   );
 };
