@@ -1,22 +1,25 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Task } from '../types/types';
-import { Example } from '../pages/add-task';
-import { title } from 'process';
+"use client"
 
-// Remember React.FC is a react functional component
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import { Example } from '@/pages/add-task';
+
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  due_date: string;
+}
 
 interface TaskCardProps {
   task: Task;
 }
 
-// This is our TaskCard Component that displays a single task
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   return (
-    // <div key={task.id} className="p-4 border border-dark rounded shadow-md mb-4 text-center">
     <div className="p-4 border border-dark rounded shadow-md mb-4 text-center">
-      {/* <p>taskid: {task.id}</p> */}
       <h2 className="text-2xl font-semibold text-blue-700">{task.title}</h2>
       <p className="text-blue-600">Description: {task.description}</p>
       <p className="text-blue-600">Status: {task.status}</p>
@@ -29,49 +32,39 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
         Incomplete
       </span>
-      <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-        Complete
-      </span>
     </div>
   );
-}
+};
 
-// This is our Main Component first part gets our tasks from the API and the second part displays them
 const HomePage: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const client = axios.create({
-    baseURL: 'http://http://127.0.0.1:8000/tasks'
-  });
+
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get<Task[]>('http://127.0.0.1:8000/api/todos/');
+        setTasks(response.data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
     fetchTasks();
-  }, []);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get<Task[]>('http://127.0.0.1:8000/tasks/?format=json');
-      setTasks(response.data);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
-
-  const addTask = async (task: Task) => {
-    client.post('/tasks', task)
-    .then((response) => {
-      setTasks(response.data);
-    })
-  };
+  }, []); // Empty dependency array ensures this runs only once
 
   const testAddTask = async () => {
-    client.post('/tasks', {
-      title: 'Test Task',
-      description: 'This is a test task',
-      status: 'incomplete',
-      due_date: '2022-12-31'
-    })
-    .then((response) => {
-      setTasks(response.data);
-    })
+    const newTask = {
+      title: 'New Task',
+      description: 'This is a new task',
+      status: 'Incomplete',
+    };
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/todos/', newTask);
+      setTasks([...tasks, response.data]);
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
   };
 
   return (
