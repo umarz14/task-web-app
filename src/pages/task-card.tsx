@@ -1,5 +1,7 @@
 import { PaperClipIcon } from '@heroicons/react/20/solid'
 
+// this is just an example of how you can use the Tailwind CSS classes in your React components.
+
 export function Example() {
   return (
     <div>

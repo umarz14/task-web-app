@@ -1,4 +1,5 @@
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+// This is just an example of how you can use the Tailwind CSS classes in your React components.
 
 export function Example() {
   return (
