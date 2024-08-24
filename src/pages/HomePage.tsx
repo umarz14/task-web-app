@@ -20,14 +20,6 @@ const HomePage: React.FC = () => {
     fetchTasks();
   }, []);
 
-  const addTask = async (task: Task) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/todos/', task);
-      setTasks([...tasks, response.data]);
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
-  };
 
   return (
     <div className="container mx-auto p-4 bg-white min-h-screen text-black flex flex-col justify-center items-center">
